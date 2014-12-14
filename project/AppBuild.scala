@@ -5,11 +5,6 @@ import android.Keys._
 object AppBuild extends Build {
 
   lazy val root = Project(id = "root", base = file("."))
-      .settings(
-        android.Plugin.androidCommands :+
-            (install <<= (
-                install in(app, Android)) map { (_) => ()}): _*
-      )
       .settings(rootSettings: _*)
       .aggregate(app, androidLib)
 
@@ -23,9 +18,11 @@ object AppBuild extends Build {
       .settings(androidLibSettings: _*)
 
   lazy val rootSettings =
-    List(
+    Seq(
       scalaVersion := "2.11.4",
-      platformTarget in Android := "android-21"
+      platformTarget in Android := "android-21",
+      install <<= install in(app, Android),
+      run <<= run in(app, Android)
     )
 
   lazy val appSettings = android.Plugin.androidBuild(androidLib) ++
