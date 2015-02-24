@@ -39,7 +39,18 @@ object AppBuild extends Build {
         proguardOptions in Android ++= Seq(
           "-ignorewarnings",
           "-keep class scala.Dynamic"
-        )
+        ),
+        resolvers ++= Seq(
+          Resolver.sonatypeRepo("releases"),
+          "jcenter" at "http://jcenter.bintray.com"
+        ),
+        libraryDependencies ++= Seq(
+          aar("com.android.support" % "appcompat-v7" % "21.0.0"),
+          aar("com.android.support" % "recyclerview-v7" % "21.0.0"),
+          aar("com.android.support" % "cardview-v7" % "21.0.0"),
+          aar("org.macroid" %% "macroid" % "2.0.0-M3"),
+          aar("org.macroid" %% "macroid-akka-fragments" % "2.0.0-M3"),
+          compilerPlugin("org.brianmckenna" %% "wartremover" % "0.10"))
       )
 
   lazy val androidLibSettings =
