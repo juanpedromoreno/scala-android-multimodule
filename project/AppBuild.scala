@@ -4,6 +4,16 @@ import android.Keys._
 
 object AppBuild extends Build {
 
+  val scalaV = "2.11.5"
+
+  def excludeArtifact(module: ModuleID, artifactOrganizations: String*): ModuleID ={
+    val excludeRules = artifactOrganizations map (org => ExclusionRule(organization = org))
+
+    println(excludeRules)
+
+    module.excludeAll(excludeRules: _*)
+  }
+
   lazy val root = Project(id = "root", base = file("."))
       .settings(rootSettings: _*)
       .aggregate(app, androidLib)
@@ -14,12 +24,12 @@ object AppBuild extends Build {
 
   val androidLib = Project(id = "androidLib",
     base = file("modules/androidLib")).settings(
-        android.Plugin.androidBuildApklib: _*)
+        android.Plugin.androidBuildAar: _*)
       .settings(androidLibSettings: _*)
 
   lazy val rootSettings =
     Seq(
-      scalaVersion := "2.11.4",
+      scalaVersion := scalaV,
       platformTarget in Android := "android-21",
       install <<= install in(app, Android),
       run <<= run in(app, Android)
@@ -27,7 +37,7 @@ object AppBuild extends Build {
 
   lazy val appSettings = android.Plugin.androidBuild(androidLib) ++
       List(
-        scalaVersion := "2.11.4",
+        scalaVersion := scalaV,
         transitiveAndroidLibs in Android := false,
         run <<= run in Android,
         apkbuildExcludes in Android ++= Seq(
@@ -55,7 +65,7 @@ object AppBuild extends Build {
 
   lazy val androidLibSettings =
     List(
-      scalaVersion := "2.11.4",
+      scalaVersion := scalaV,
       exportJars in Test := false,
       resolvers ++= Seq(
         Resolver.sonatypeRepo("releases"),
