@@ -12,15 +12,20 @@ object AppBuild extends Build {
       .settings(
         scalaVersion := scalaV,
         platformTarget in Android := "android-21",
-        compile <<= compile in(app, Android),
-        install <<= install in(app, Android),
-        run <<= run in(app, Android))
+        packageT in Compile <<= packageT in Android in app,
+        packageRelease <<= packageRelease in Android in app,
+        packageDebug <<= packageDebug in Android in app,
+        install <<= install in Android in app,
+        run <<= run in Android in app,
+        packageName in Android := "com.example.app"
+
+      )
       .aggregate(app, androidLib)
 
   lazy val app = Project(id = "app", base = file("modules/app"))
-      .settings(appSettings: _*)
       .androidBuildWith(androidLib)
       .settings(projectDependencies ~= (_.map(excludeArtifact(_, "com.android"))))
+      .settings(appSettings: _*)
 
   val androidLib = Project(id = "androidLib", base = file("modules/androidLib"))
       .settings(androidLibSettings: _*)
