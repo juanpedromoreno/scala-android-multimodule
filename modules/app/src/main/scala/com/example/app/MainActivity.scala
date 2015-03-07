@@ -7,6 +7,6 @@ class MainActivity extends Activity with TypedViewHolder {
     override def onCreate(b: Bundle) {
         super.onCreate(b)
         setContentView(R.layout.hello)
-        findView(TR.test_textview).setText("Hello again, world!")
+        findView(TR.test_textview).setText("Hello, world!")
     }
 }
